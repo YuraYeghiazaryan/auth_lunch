@@ -1,0 +1,23 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/sovats
+    username: sovats
+    password: sovats123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+auth:
+  jwt:
+    secret: "change-me-to-a-long-random-string-which-is-more-than-32-characters" # for dev only
+    issuer: "http://localhost:8082"
+    access-token-ttl-minutes: 60
