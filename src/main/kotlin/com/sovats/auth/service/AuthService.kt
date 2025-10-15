@@ -38,7 +38,7 @@ class AuthService(
         }
 
         // additionalClaims can contain roles etc
-        val token = jwtUtil.generateToken(user.id.toString(), mapOf("email" to user.email))
+        val token = jwtUtil.generateToken(user.id.toString())
         return token
     }
 }
