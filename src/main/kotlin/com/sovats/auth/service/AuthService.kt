@@ -37,7 +37,6 @@ class AuthService(
             throw IllegalStateException("Invalid credentials")
         }
 
-        // additionalClaims can contain roles etc
         val token = jwtUtil.generateToken(user.id.toString())
         return token
     }
