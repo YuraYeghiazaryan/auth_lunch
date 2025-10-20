@@ -5,6 +5,7 @@ import com.sovats.auth.api.SignupRequest
 import com.sovats.auth.persistence.entity.User
 import com.sovats.auth.persistence.repository.UserRepository
 import com.sovats.auth.security.JwtUtil
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.IllegalStateException
@@ -12,6 +13,7 @@ import java.lang.IllegalStateException
 @Service
 class AuthService(
     private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
     private val jwtUtil: JwtUtil
 ) {
 
@@ -22,7 +24,7 @@ class AuthService(
         }
         val user = User(
             email = req.email,
-            password = req.password,
+            password = passwordEncoder.encode(req.password),
             firstName = req.firstName,
             lastName = req.lastName
         )
@@ -33,7 +35,7 @@ class AuthService(
         val user = userRepository.findByEmail(req.email)
             ?: throw IllegalStateException("Invalid credentials")
 
-        if (req.password != user.password) {
+        if (!passwordEncoder.matches(req.password, user.password)) {
             throw IllegalStateException("Invalid credentials")
         }
 
