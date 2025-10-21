@@ -17,23 +17,29 @@ class JwtUtil(
     private val issuer: String = jwtProperties.issuer
     private val ttlMinutes: Long = jwtProperties.accessTokenTtlMinutes
 
-    fun generateToken(subject: String, additionalClaims: Map<String, Any> = emptyMap()): String {
+    fun generateToken(
+        subject: String,
+        additionalClaims: Map<String, Any> = emptyMap()
+    ): String {
         val now = Instant.now()
         val exp = now.plus(ttlMinutes, ChronoUnit.MINUTES)
 
-        val b = Jwts.builder()
+        return Jwts.builder()
             .setIssuer(issuer)
             .setSubject(subject)
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(exp))
             .addClaims(additionalClaims)
             .signWith(key, SignatureAlgorithm.HS256)
-
-        return b.compact()
+            .compact()
     }
 
-    fun validateAndGetSubject(token: String): String {
-        val parsed = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
-        return parsed.body.subject
+    fun validateAndGetSubject(token: String): Map<String, Any> {
+        val parsed = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+
+        return parsed.body
     }
 }

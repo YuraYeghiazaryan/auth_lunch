@@ -39,7 +39,11 @@ class AuthService(
             throw IllegalStateException("Invalid credentials")
         }
 
-        val token = jwtUtil.generateToken(user.id.toString())
-        return token
+        val claims = mapOf(
+            "email" to user.email,
+            "firstName" to user.firstName
+        )
+
+        return jwtUtil.generateToken(user.id.toString(), claims)
     }
 }
